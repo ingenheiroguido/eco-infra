@@ -1,23 +1,26 @@
-document.getElementById("calcForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
+console.log("JS carregou");
 
-    let data = {
-        floors: parseInt(document.getElementById("floors").value),
-        units_per_floor: parseInt(document.getElementById("units").value),
-        people_per_unit: parseInt(document.getElementById("people").value)
-    };
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("calcForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    let response = await fetch("/api/calculate", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
+        let data = {
+            floors: parseInt(document.getElementById("floors").value),
+            units_per_floor: parseInt(document.getElementById("units").value),
+            people_per_unit: parseInt(document.getElementById("people").value)
+        };
 
-    let result = await response.json();
+        let response = await fetch("/api/calculate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
 
-    document.getElementById("resultado").innerHTML = `
+        let result = await response.json();
+
+        document.getElementById("resultado").innerHTML = `
         <h3>📊 Dados Gerais</h3>
         <p><b>População:</b> ${result.population}</p>
 
@@ -36,4 +39,6 @@ document.getElementById("calcForm").addEventListener("submit", async function (e
         <p>🔵 Reciclável: ${result.containers.recyclable}</p>
         <p>⚫ Rejeito: ${result.containers.reject}</p>
     `;
+    });
+
 });
