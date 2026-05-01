@@ -93,18 +93,35 @@ function carregarProjeto(index) {
     document.getElementById("resultado").innerHTML = projeto.resultado;
 }
 
-
 function gerarPDF() {
 
     let elemento = document.getElementById("resultado");
 
-    let opt = {
-        margin: 0.5,
-        filename: "relatorio_eco_infra.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
-    };
+    if (!elemento || elemento.innerHTML.trim() === "") {
+        alert("Faça o cálculo antes de gerar o PDF!");
+        return;
+    }
 
-    html2pdf().set(opt).from(elemento).save();
+    if (typeof html2pdf === "undefined") {
+        alert("Erro: biblioteca PDF não carregou");
+        return;
+    }
+
+    let container = document.createElement("div");
+
+    container.innerHTML = `
+        <h1>Relatório EcoInfra</h1>
+        <hr>
+        ${elemento.innerHTML}
+    `;
+
+    html2pdf()
+        .from(container)
+        .set({
+            margin: 10,
+            filename: "eco-infra-relatorio.pdf",
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+        })
+        .save();
 }
