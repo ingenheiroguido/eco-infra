@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     listarProjetos();
+
     const form = document.getElementById("calcForm");
 
     form.addEventListener("submit", async function (e) {
@@ -23,9 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await response.json();
 
             document.getElementById("resultado").innerHTML = `
-                <h3>Resultado</h3>
-                <p>População: ${result.population}</p>
-                <p>Área necessária: ${result.area_sala} m²</p>
+                <h3>📊 Dados Gerais</h3>
+                <p><b>População:</b> ${result.population}</p>
+
+                <h3>♻️ Resíduos</h3>
+                <p>🟢 Orgânico: ${result.organic.toFixed(2)} kg</p>
+                <p>🔵 Reciclável: ${result.recyclable.toFixed(2)} kg</p>
+                <p>⚫ Rejeito: ${result.reject.toFixed(2)} kg</p>
+
+                <h3>📦 Dimensionamento</h3>
+                <p>Volume diário: ${result.volume_total.toFixed(2)} m³</p>
+                <p>Volume armazenamento: ${result.volume_real.toFixed(2)} m³</p>
+                <p>Área da sala: ${result.area_sala.toFixed(2)} m²</p>
+
+                <h3>🗑️ Containers necessários</h3>
+                <p>🟢 Orgânico: ${result.containers.organic}</p>
+                <p>🔵 Reciclável: ${result.containers.recyclable}</p>
+                <p>⚫ Rejeito: ${result.containers.reject}</p>
             `;
 
         } catch (error) {
@@ -48,12 +64,13 @@ function salvarProjeto() {
 
     let projetos = JSON.parse(localStorage.getItem("projetos")) || [];
 
-    projetos.push(resultadoHTML); // salva HTML, não objeto
+    projetos.push(resultadoHTML);
 
     localStorage.setItem("projetos", JSON.stringify(projetos));
 
     listarProjetos();
 }
+
 function listarProjetos() {
 
     let lista = JSON.parse(localStorage.getItem("projetos")) || [];
@@ -72,10 +89,10 @@ function listarProjetos() {
 }
 
 function carregarProjeto(index) {
-
     let lista = JSON.parse(localStorage.getItem("projetos"));
     document.getElementById("resultado").innerHTML = lista[index];
 }
+
 function gerarPDF() {
 
     let conteudo = document.getElementById("resultado").innerHTML;
@@ -85,65 +102,16 @@ function gerarPDF() {
         return;
     }
 
-    let dataAtual = new Date().toLocaleDateString();
-
     let janela = window.open("", "", "width=800,height=600");
 
     janela.document.write(`
         <html>
         <head>
             <title>Relatório EcoInfra</title>
-            <style>
-                body {
-                    font-family: Arial;
-                    padding: 30px;
-                    line-height: 1.6;
-                }
-
-                h1 {
-                    text-align: center;
-                    margin-bottom: 5px;
-                }
-
-                h2 {
-                    text-align: center;
-                    margin-top: 0;
-                    color: gray;
-                }
-
-                .info {
-                    margin-bottom: 20px;
-                }
-
-                .footer {
-                    margin-top: 40px;
-                    font-size: 12px;
-                    text-align: center;
-                    color: gray;
-                }
-
-                hr {
-                    margin: 20px 0;
-                }
-            </style>
         </head>
         <body>
-
             <h1>EcoInfra</h1>
-            <h2>Relatório de Dimensionamento de Resíduos</h2>
-
-            <div class="info">
-                <p><b>Data:</b> ${dataAtual}</p>
-            </div>
-
-            <hr>
-
             ${conteudo}
-
-            <div class="footer">
-                Sistema EcoInfra - Projeto Acadêmico
-            </div>
-
         </body>
         </html>
     `);
@@ -153,34 +121,4 @@ function gerarPDF() {
     setTimeout(() => {
         janela.print();
     }, 500);
-}
-let janela = window.open("", "", "width=800,height=600");
-
-janela.document.write(`
-        <html>
-        <head>
-            <title>Relatório EcoInfra</title>
-            <style>
-                body {
-                    font-family: Arial;
-                    padding: 20px;
-                }
-                h1 {
-                    text-align: center;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Relatório EcoInfra</h1>
-            <hr>
-            ${conteudo}
-        </body>
-        </html>
-    `);
-
-janela.document.close();
-
-setTimeout(() => {
-    janela.print();
-}, 500);
 }
