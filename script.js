@@ -1,5 +1,5 @@
 console.log("JS carregou");
-
+document.body.style.background = "red";
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("calcForm").addEventListener("submit", async function (e) {
         e.preventDefault();
@@ -25,14 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
         <p><b>População:</b> ${result.population}</p>
 
         <h3>♻️ Resíduos</h3>
-        <p>🟢 Orgânico: ${result.organic} kg</p>
-        <p>🔵 Reciclável: ${result.recyclable} kg</p>
-        <p>⚫ Rejeito: ${result.reject} kg</p>
+        <p>🟢 Orgânico: ${result.organic.toFixed(2)} kg</p>
+        <p>🔵 Reciclável: ${result.recyclable.toFixed(2)} kg</p>
+        <p>⚫ Rejeito: ${result.reject.toFixed(2)} kg</p>
 
         <h3>📦 Dimensionamento</h3>
-        <p>Volume diário: ${result.volume_total} m³</p>
-        <p>Volume armazenamento: ${result.volume_real} m³</p>
-        <p>Área da sala: ${result.area_sala} m²</p>
+        <p>Volume diário: ${result.volume_total.toFixed(2)} m³</p>
+        <p>Volume armazenamento: ${result.volume_real.toFixed(2)} m³</p>
+        <p>Área da sala: ${result.area_sala.toFixed(2)} m²</p>
 
         <h3>🗑️ Containers necessários</h3>
         <p>🟢 Orgânico: ${result.containers.organic}</p>
