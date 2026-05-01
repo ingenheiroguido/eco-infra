@@ -39,22 +39,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function salvarProjeto() {
 
-    let resultado = document.getElementById("resultado").innerHTML;
+    let resultadoHTML = document.getElementById("resultado").innerHTML;
 
-    if (!resultado.trim()) {
+    if (!resultadoHTML.trim()) {
         alert("Faça um cálculo primeiro!");
         return;
     }
 
     let projetos = JSON.parse(localStorage.getItem("projetos")) || [];
 
-    projetos.push(resultado);
+    projetos.push(resultadoHTML); // salva HTML, não objeto
 
     localStorage.setItem("projetos", JSON.stringify(projetos));
 
     listarProjetos();
 }
-
 function listarProjetos() {
 
     let lista = JSON.parse(localStorage.getItem("projetos")) || [];
@@ -76,4 +75,44 @@ function carregarProjeto(index) {
 
     let lista = JSON.parse(localStorage.getItem("projetos"));
     document.getElementById("resultado").innerHTML = lista[index];
+}
+
+function gerarPDF() {
+
+    let conteudo = document.getElementById("resultado").innerHTML;
+
+    if (!conteudo.trim()) {
+        alert("Faça um cálculo primeiro!");
+        return;
+    }
+
+    let janela = window.open("", "", "width=800,height=600");
+
+    janela.document.write(`
+        <html>
+        <head>
+            <title>Relatório EcoInfra</title>
+            <style>
+                body {
+                    font-family: Arial;
+                    padding: 20px;
+                }
+                h1 {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Relatório EcoInfra</h1>
+            <hr>
+            ${conteudo}
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
+
+    setTimeout(() => {
+        janela.print();
+    }, 500);
 }
