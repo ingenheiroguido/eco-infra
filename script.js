@@ -1,6 +1,13 @@
 console.log("JS carregou");
 document.body.style.background = "red";
 document.addEventListener("DOMContentLoaded", function () {
+
+    console.log("JS carregou");
+
+    document.body.style.background = "red";
+
+    listarProjetos();
+
     document.getElementById("calcForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
@@ -42,3 +49,62 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
+function salvarProjeto() {
+
+    let projeto = {
+        floors: document.getElementById("floors").value,
+        units: document.getElementById("units").value,
+        people: document.getElementById("people").value,
+        resultado: document.getElementById("resultado").innerHTML
+    };
+
+    let lista = JSON.parse(localStorage.getItem("projetos")) || [];
+
+    lista.push(projeto);
+
+    localStorage.setItem("projetos", JSON.stringify(lista));
+
+    alert("Projeto salvo!");
+    listarProjetos();
+}
+
+function listarProjetos() {
+
+    let lista = JSON.parse(localStorage.getItem("projetos")) || [];
+    let div = document.getElementById("listaProjetos");
+
+    div.innerHTML = "";
+
+    lista.forEach((proj, index) => {
+        div.innerHTML += `
+            <div class="card">
+                <p><b>Projeto ${index + 1}</b></p>
+                <button onclick="carregarProjeto(${index})">Abrir</button>
+            </div>
+        `;
+    });
+}
+
+function carregarProjeto(index) {
+    let lista = JSON.parse(localStorage.getItem("projetos"));
+    let projeto = lista[index];
+
+    document.getElementById("resultado").innerHTML = projeto.resultado;
+}
+
+
+function gerarPDF() {
+
+    let elemento = document.getElementById("resultado");
+
+    let opt = {
+        margin: 0.5,
+        filename: "relatorio_eco_infra.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+    };
+
+    html2pdf().set(opt).from(elemento).save();
+}
