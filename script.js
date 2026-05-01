@@ -76,7 +76,6 @@ function carregarProjeto(index) {
     let lista = JSON.parse(localStorage.getItem("projetos"));
     document.getElementById("resultado").innerHTML = lista[index];
 }
-
 function gerarPDF() {
 
     let conteudo = document.getElementById("resultado").innerHTML;
@@ -86,9 +85,78 @@ function gerarPDF() {
         return;
     }
 
+    let dataAtual = new Date().toLocaleDateString();
+
     let janela = window.open("", "", "width=800,height=600");
 
     janela.document.write(`
+        <html>
+        <head>
+            <title>Relatório EcoInfra</title>
+            <style>
+                body {
+                    font-family: Arial;
+                    padding: 30px;
+                    line-height: 1.6;
+                }
+
+                h1 {
+                    text-align: center;
+                    margin-bottom: 5px;
+                }
+
+                h2 {
+                    text-align: center;
+                    margin-top: 0;
+                    color: gray;
+                }
+
+                .info {
+                    margin-bottom: 20px;
+                }
+
+                .footer {
+                    margin-top: 40px;
+                    font-size: 12px;
+                    text-align: center;
+                    color: gray;
+                }
+
+                hr {
+                    margin: 20px 0;
+                }
+            </style>
+        </head>
+        <body>
+
+            <h1>EcoInfra</h1>
+            <h2>Relatório de Dimensionamento de Resíduos</h2>
+
+            <div class="info">
+                <p><b>Data:</b> ${dataAtual}</p>
+            </div>
+
+            <hr>
+
+            ${conteudo}
+
+            <div class="footer">
+                Sistema EcoInfra - Projeto Acadêmico
+            </div>
+
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
+
+    setTimeout(() => {
+        janela.print();
+    }, 500);
+}
+let janela = window.open("", "", "width=800,height=600");
+
+janela.document.write(`
         <html>
         <head>
             <title>Relatório EcoInfra</title>
@@ -110,9 +178,9 @@ function gerarPDF() {
         </html>
     `);
 
-    janela.document.close();
+janela.document.close();
 
-    setTimeout(() => {
-        janela.print();
-    }, 500);
+setTimeout(() => {
+    janela.print();
+}, 500);
 }
