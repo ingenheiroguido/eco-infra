@@ -1,27 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    listarProjetos();
+    console.log("DOM carregou");
 
-    document.getElementById("calcForm").addEventListener("submit", async function (e) {
+    let form = document.getElementById("calcForm");
+
+    if (!form) {
+        console.log("FORM NÃO EXISTE");
+        return;
+    }
+
+    form.addEventListener("submit", function (e) {
         e.preventDefault();
+        alert("BOTÃO FUNCIONOU");
+    });
 
-        let data = {
-            floors: parseInt(document.getElementById("floors").value),
-            units_per_floor: parseInt(document.getElementById("units").value),
-            people_per_unit: parseInt(document.getElementById("people").value)
-        };
+});
+let data = {
+    floors: parseInt(document.getElementById("floors").value),
+    units_per_floor: parseInt(document.getElementById("units").value),
+    people_per_unit: parseInt(document.getElementById("people").value)
+};
 
-        let response = await fetch("/api/calculate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+let response = await fetch("/api/calculate", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+});
 
-        let result = await response.json();
+let result = await response.json();
 
-        document.getElementById("resultado").innerHTML = `
+document.getElementById("resultado").innerHTML = `
         <h3>📊 Dados Gerais</h3>
         <p><b>População:</b> ${result.population}</p>
 
@@ -39,7 +49,5 @@ document.addEventListener("DOMContentLoaded", function () {
         <p>🟢 Orgânico: ${result.containers.organic}</p>
         <p>🔵 Reciclável: ${result.containers.recyclable}</p>
         <p>⚫ Rejeito: ${result.containers.reject}</p>
-    `;
-    });
-
-});
+ `;
+;
